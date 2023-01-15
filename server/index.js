@@ -45,15 +45,24 @@ app.get("/get", async (req, res) => {
     const snapshot = await person.get();
     const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     res.send(list);
-  });
+});
 
-  app.get("/get/:id", async (req, res) => {
-    const id = req.params.id;
-    const doc = await person.doc(id).get();
-    if (!doc.exists) {
-      return res.status(404).send({ error: "Document not found" });
-    }
-    res.send(doc.data());
+
+app.get("/female", async (req, res) => {
+    const snapshot = await person.get();
+
+    const list = snapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((data) => data.data[0].Gender === "Female");
+    res.send(list);
+});
+app.get("/male", async (req, res) => {
+    const snapshot = await person.get();
+
+    const list = snapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((data) => data.data[0].Gender === "Male");
+    res.send(list);
 });
 
 app.post("/create", async (req, res) => {
